@@ -87,7 +87,6 @@ terraform/
 │   ├── cloudwatch/
 │   └── sns/
 ├── envs/
-│   ├── dev/
 │   ├── stage/
 │   └── prod/
 ├── provider.tf
@@ -143,19 +142,4 @@ terraform/
 
 ---
 
-## ��� References
-
-- https://github.com/bezkoder/nodejs-express-mysql  
-- https://github.com/aws-samples/aws-refarch-wordpress  
-- https://github.com/antonputra/tutorials  
-
----
-
-## ��� Future Enhancements
-
-- Auto Scaling Groups
-- HTTPS using ACM
-- Secrets Manager for database credentials
-- CI/CD pipeline (GitHub Actions / Jenkins)
-- Migration to ECS / EKS
 
