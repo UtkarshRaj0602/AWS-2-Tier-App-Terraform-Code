@@ -1,173 +1,161 @@
 # ��� Phase 1 – AWS 2-Tier Application (Terraform | DevOps Project)
 
-## Overview
+## ��� Overview
 
-This project implements a **production-style AWS 2-Tier architecture** using **Terraform (Infrastructure as Code)**, following **modular design and DevOps best practices**.
+This project demonstrates a **production-style AWS 2-Tier architecture** built using **Terraform** and DevOps best practices.
 
-The infrastructure provisions and runs a **real Node.js application** on EC2 behind an **Application Load Balancer**, securely connected to **Amazon RDS**, with monitoring and alerting enabled.
-
-The application layer is adapted from a public reference repository and re-architected to align with **production, security, and observability standards**.
-
----
-
-## Reference Application
-
-This project uses a public Node.js application as the application layer reference:
-
-- Repository: https://github.com/Empyrexn/AWS-Two-Tier-Todo-App-Deployment
-
-Why this repository:
-- Real working **Node.js Todo application**
-- Proven **EC2 + ALB + RDS** architecture
-- Clear separation of application and database layers
-- Suitable for production-like DevOps hardening
-
-Note:
-The application code is reused, but **all infrastructure is rebuilt from scratch using Terraform modules** and best practices.
+A **Node.js + Express + MySQL application** runs on **EC2 instances in private subnets**, exposed via an **Application Load Balancer (ALB)** and connected securely to **Amazon RDS**.  
+Monitoring, alerting, and secure networking are included.
 
 ---
 
-## Architecture
+## ��� Application Layer (Reference Project)
+
+The application used in this project is based on the following public GitHub repository:
+
+��� **bezkoder/nodejs-express-mysql**  
+��� https://github.com/bezkoder/nodejs-express-mysql
+
+### Application Stack
+- Node.js
+- Express.js
+- MySQL
+- REST API–based backend
+
+⚠️ **Note:**  
+Only the **application code and setup** are referenced from this repo.  
+The **entire AWS infrastructure is designed and deployed using Terraform**, following modular structure and best practices.
+
+---
+
+## ���️ Architecture
 
 ### Application Layer
 - Application Load Balancer (ALB)
-- EC2 instances in private subnets
-- Node.js application managed using PM2
-- Target groups and health checks
+- EC2 instances (private subnets)
+- Node.js + Express application
+- ALB health checks
 
 ### Database Layer
-- Amazon RDS (MySQL / PostgreSQL)
+- Amazon RDS (MySQL)
 - Private subnets only
-- Parameter groups and security isolation
+- Secure access from EC2
 
-### Supporting Components
-- Custom VPC (multi-AZ)
-- Public and private subnets
-- Internet Gateway and NAT Gateway
-- CloudWatch metrics and alarms
-- SNS for alert notifications
-
----
-
-## Tech Stack
-
-- Cloud: AWS
-- Infrastructure as Code: Terraform (modules-based)
-- Compute: EC2
-- Load Balancer: Application Load Balancer
-- Database: Amazon RDS
-- Application Runtime: Node.js
-- Process Manager: PM2
-- Monitoring: CloudWatch
-- Alerting: SNS
+### Supporting Services
+- VPC (multi-AZ)
+- Public & Private subnets
+- Internet Gateway & NAT Gateway
+- CloudWatch metrics & alarms
+- SNS for notifications
 
 ---
 
-## Project Objectives
+## ���️ Tech Stack
 
-- Build a real, working **AWS 2-tier application**
-- Follow **Terraform best practices**
-- Design secure networking and access control
-- Enable monitoring and alerting
-- Practice real-world DevOps troubleshooting
-- Maintain clear and reusable documentation
+- **Cloud:** AWS
+- **IaC:** Terraform
+- **Compute:** EC2
+- **Load Balancer:** Application Load Balancer (ALB)
+- **Database:** Amazon RDS (MySQL)
+- **Application:** Node.js, Express
+- **Monitoring:** CloudWatch
+- **Alerting:** SNS
 
 ---
 
-## Terraform Structure
+## ��� Project Goals
 
+- Deploy a **working 2-tier application on AWS**
+- Use **Terraform with a modular structure**
+- Follow **AWS networking & security best practices**
+- Enable **monitoring and alerting**
+- Practice **real-world DevOps troubleshooting**
+
+---
+
+## ��� Terraform Structure
+
+```text
 terraform/
 ├── modules/
-│ ├── vpc/
-│ ├── subnets/
-│ ├── security-groups/
-│ ├── alb/
-│ ├── ec2/
-│ ├── rds/
-│ ├── cloudwatch/
-│ └── sns/
+│   ├── vpc/
+│   ├── subnets/
+│   ├── security-groups/
+│   ├── alb/
+│   ├── ec2/
+│   ├── rds/
+│   ├── cloudwatch/
+│   └── sns/
 ├── envs/
-│ ├── dev/
-│ ├── stage/
-│ └── prod/
-├── backend.tf
+│   ├── dev/
+│   ├── stage/
+│   └── prod/
 ├── provider.tf
+├── backend.tf
 ├── variables.tf
 ├── outputs.tf
 └── main.tf
 
-
-Key points:
-- Modular and reusable Terraform code
-- Environment-based separation
-- Remote backend (S3 + DynamoDB)
-- Clean variable and output handling
-
----
-
-## Deployment Flow
+## ⚙️ High-Level Deployment Flow
 
 1. Create VPC with public and private subnets
 2. Configure Internet Gateway, NAT Gateway, and route tables
-3. Deploy EC2 instances in private subnets
-4. Install Node.js application using user-data or scripts
-5. Deploy RDS in private subnets
-6. Secure application-to-database access using Security Groups
-7. Deploy Application Load Balancer
-8. Configure target groups and health checks
-9. Enable CloudWatch metrics and alarms
-10. Send alerts using SNS
+3. Launch EC2 instances in private subnets
+4. Install Node.js application on EC2
+5. Deploy RDS MySQL in private subnets
+6. Connect application to RDS using environment variables
+7. Configure ALB with target groups and health checks
+8. Enable CloudWatch monitoring and alarms
+9. Send alerts via SNS
 
 ---
 
-## Real-World Failure Scenarios Covered
+## ��� Common Issues Covered
 
-This project intentionally covers common production issues:
-
-| Issue | Scenario |
-|------|---------|
-| 502 Bad Gateway | ALB to EC2 Security Group misconfiguration |
-| App unreachable | Incorrect subnet routing |
+| Issue | Description |
+|------|------------|
+| 502 Error | ALB → EC2 Security Group misconfiguration |
+| App unreachable | Incorrect route tables |
 | DB connection failure | Wrong RDS credentials or SG rules |
-| Memory pressure | EC2 RAM exhaustion |
+| High memory usage | EC2 RAM exhaustion |
 | Unhealthy targets | Incorrect ALB health check path |
 
-Each issue is identified, analyzed, and resolved as part of this project.
+---
+
+## �� Monitoring & Alerting
+
+- **CloudWatch Metrics**
+  - CPU Utilization
+  - Memory Usage
+  - Disk Usage
+  - EC2 Status Checks
+- **CloudWatch Alarms**
+- **SNS Email Notifications**
 
 ---
 
-## Monitoring and Alerting
+## ��� Security Highlights
 
-CloudWatch Metrics:
-- CPU Utilization
-- Memory Usage
-- Disk Usage
-- EC2 Status Checks
-
-Alarms:
-- High CPU or Memory usage
-- Instance health check failures
-
-Notifications:
-- SNS email alerts
-
----
-
-## Security Highlights
-
-- EC2 instances are not publicly accessible
-- ALB is the only public entry point
+- EC2 instances are **not publicly accessible**
+- ALB is the **only internet-facing component**
+- RDS accessible **only from the application layer**
 - Least-privilege Security Groups
-- RDS isolated in private subnets
-- Secrets passed via variables (extendable to AWS Secrets Manager)
 
 ---
 
-## Summary
+## ��� References
 
-This project reflects how **real AWS production infrastructure** is designed and operated:
-- Automation over manual configuration
-- Observability over guesswork
-- Security by default
-- Terraform done the right way
+- https://github.com/bezkoder/nodejs-express-mysql  
+- https://github.com/aws-samples/aws-refarch-wordpress  
+- https://github.com/antonputra/tutorials  
+
+---
+
+## ��� Future Enhancements
+
+- Auto Scaling Groups
+- HTTPS using ACM
+- Secrets Manager for database credentials
+- CI/CD pipeline (GitHub Actions / Jenkins)
+- Migration to ECS / EKS
 
