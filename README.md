@@ -1,4 +1,4 @@
-# íº€ Phase 1 â€“ AWS 2-Tier Application (Terraform | DevOps Project)
+# íº€ AWS 2-Tier Application (Terraform | DevOps Project)
 
 ## í³Œ Overview
 
