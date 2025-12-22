@@ -1,6 +1,6 @@
-# íº€ AWS 2-Tier Application (Terraform | DevOps Project)
+# ï¿½ï¿½ï¿½ AWS 2-Tier Application (Terraform | DevOps Project)
 
-## í³Œ Overview
+## ï¿½ï¿½ï¿½ Overview
 
 This project demonstrates a **production-style AWS 2-Tier architecture** built using **Terraform** and DevOps best practices.
 
@@ -9,12 +9,12 @@ Monitoring, alerting, and secure networking are included.
 
 ---
 
-## í·  Application Layer (Reference Project)
+## ï¿½ï¿½ï¿½ Application Layer (Reference Project)
 
 The application used in this project is based on the following public GitHub repository:
 
-í±‰ **bezkoder/nodejs-express-mysql**  
-í´— https://github.com/bezkoder/nodejs-express-mysql
+ï¿½ï¿½ï¿½ **bezkoder/nodejs-express-mysql**  
+ï¿½ï¿½ï¿½ https://github.com/bezkoder/nodejs-express-mysql
 
 ### Application Stack
 - Node.js
@@ -28,7 +28,7 @@ The **entire AWS infrastructure is designed and deployed using Terraform**, foll
 
 ---
 
-## í¿—ï¸ Architecture
+## ï¿½ï¿½ï¿½ï¸ Architecture
 
 ### Application Layer
 - Application Load Balancer (ALB)
@@ -51,12 +51,13 @@ The **entire AWS infrastructure is designed and deployed using Terraform**, foll
 ---
 
 
+<img width="3891" height="1523" alt="AWS-2-Tier-App-Architecture-Diagram" src="https://github.com/user-attachments/assets/0d9f6ef4-e3af-4f0f-9fb2-818b19c72d5f" />
 
 
 
 ---
 
-## í» ï¸ Tech Stack
+## ï¿½ï¿½ï¿½ï¸ Tech Stack
 
 - **Cloud:** AWS
 - **IaC:** Terraform
@@ -69,7 +70,7 @@ The **entire AWS infrastructure is designed and deployed using Terraform**, foll
 
 ---
 
-## í¾¯ Project Goals
+## ï¿½ï¿½ï¿½ Project Goals
 
 - Deploy a **working 2-tier application on AWS**
 - Use **Terraform with a modular structure**
@@ -79,7 +80,7 @@ The **entire AWS infrastructure is designed and deployed using Terraform**, foll
 
 ---
 
-## í·© Terraform Structure
+## ï¿½ï¿½ï¿½ Terraform Structure
 
 ```text
 terraform/
@@ -117,7 +118,7 @@ terraform/
 
 ---
 
-## íº¨ Common Issues Covered
+## ï¿½ï¿½ï¿½ Common Issues Covered
 
 | Issue | Description |
 |------|------------|
@@ -141,7 +142,7 @@ terraform/
 
 ---
 
-## í´ Security Highlights
+## ï¿½ï¿½ï¿½ Security Highlights
 
 - EC2 instances are **not publicly accessible**
 - ALB is the **only internet-facing component**
