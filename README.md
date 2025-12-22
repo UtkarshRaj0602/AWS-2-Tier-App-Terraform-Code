@@ -1,6 +1,6 @@
-# ��� AWS 2-Tier Application (Terraform | DevOps Project)
+# AWS 2-Tier Application (Terraform | DevOps Project)
 
-## ��� Overview
+## Overview
 
 This project demonstrates a **production-style AWS 2-Tier architecture** built using **Terraform** and DevOps best practices.
 
@@ -9,7 +9,7 @@ Monitoring, alerting, and secure networking are included.
 
 ---
 
-## ��� Application Layer (Reference Project)
+## Application Layer (Reference Project)
 
 The application used in this project is based on the following public GitHub repository:
 
@@ -28,7 +28,7 @@ The **entire AWS infrastructure is designed and deployed using Terraform**, foll
 
 ---
 
-## ���️ Architecture
+## Architecture
 
 ---
 
@@ -56,7 +56,7 @@ The **entire AWS infrastructure is designed and deployed using Terraform**, foll
 
 ---
 
-## ���️ Tech Stack
+## Tech Stack
 
 - **Cloud:** AWS
 - **IaC:** Terraform
@@ -69,7 +69,7 @@ The **entire AWS infrastructure is designed and deployed using Terraform**, foll
 
 ---
 
-## ��� Project Goals
+## Project Goals
 
 - Deploy a **working 2-tier application on AWS**
 - Use **Terraform with a modular structure**
@@ -79,7 +79,7 @@ The **entire AWS infrastructure is designed and deployed using Terraform**, foll
 
 ---
 
-## ��� Terraform Structure
+## Terraform Structure
 
 ```text
 terraform/
@@ -103,7 +103,7 @@ terraform/
 
 ```  
 
-## ⚙️ High-Level Deployment Flow
+## High-Level Deployment Flow
 
 1. Create VPC with public and private subnets
 2. Configure Internet Gateway, NAT Gateway, and route tables
@@ -117,7 +117,7 @@ terraform/
 
 ---
 
-## ��� Common Issues Covered
+## Common Issues Covered
 
 | Issue | Description |
 |------|------------|
@@ -129,7 +129,7 @@ terraform/
 
 ---
 
-## �� Monitoring & Alerting
+## Monitoring & Alerting
 
 - **CloudWatch Metrics**
   - CPU Utilization
@@ -141,7 +141,7 @@ terraform/
 
 ---
 
-## ��� Security Highlights
+## Security Highlights
 
 - EC2 instances are **not publicly accessible**
 - ALB is the **only internet-facing component**
