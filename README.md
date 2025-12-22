@@ -13,8 +13,8 @@ Monitoring, alerting, and secure networking are included.
 
 The application used in this project is based on the following public GitHub repository:
 
-��� **bezkoder/nodejs-express-mysql**  
-��� https://github.com/bezkoder/nodejs-express-mysql
+**bezkoder/nodejs-express-mysql**  
+https://github.com/bezkoder/nodejs-express-mysql
 
 ### Application Stack
 - Node.js
@@ -22,7 +22,7 @@ The application used in this project is based on the following public GitHub rep
 - MySQL
 - REST API–based backend
 
-⚠️ **Note:**  
+ **Note:**  
 Only the **application code and setup** are referenced from this repo.  
 The **entire AWS infrastructure is designed and deployed using Terraform**, following modular structure and best practices.
 
