@@ -1,11 +1,14 @@
-# Ì∫Ä AWS 2-Tier Application (Terraform | DevOps Project)
+# Ì∫ß AWS 2-Tier Application ‚Äì STAGE (Terraform | DevOps Project)
 
 ## Ì≥å Overview
 
-This project demonstrates a **production-style AWS 2-Tier architecture** built using **Terraform** and DevOps best practices.
+This project represents the **STAGE environment** for a **production-style AWS 2-Tier architecture**, built using **Terraform** and DevOps best practices.
 
-A **Node.js + Express + MySQL application** runs on **EC2 instances in private subnets**, exposed via an **Application Load Balancer (ALB)** and connected securely to **Amazon RDS**.  
-Monitoring, alerting, and secure networking are included.
+The stage setup is used for **testing, validation, and troubleshooting** before changes are promoted to production.
+
+A **Node.js + Express + MySQL application** runs on **EC2 instances in private subnets**, exposed via an **Application Load Balancer (ALB)** and connected securely to **Amazon RDS**.
+
+Monitoring, alerting, and secure networking are enabled to closely mirror the production environment.
 
 ---
 
@@ -13,8 +16,8 @@ Monitoring, alerting, and secure networking are included.
 
 The application used in this project is based on the following public GitHub repository:
 
-Ì±â **bezkoder/nodejs-express-mysql**  
-Ì¥ó https://github.com/bezkoder/nodejs-express-mysql
+**bezkoder/nodejs-express-mysql**  
+https://github.com/bezkoder/nodejs-express-mysql
 
 ### Application Stack
 - Node.js
@@ -23,12 +26,12 @@ The application used in this project is based on the following public GitHub rep
 - REST API‚Äìbased backend
 
 ‚ö†Ô∏è **Note:**  
-Only the **application code and setup** are referenced from this repo.  
-The **entire AWS infrastructure is designed and deployed using Terraform**, following modular structure and best practices.
+Only the **application code and setup** are referenced from this repository.  
+The **entire AWS infrastructure is provisioned using Terraform**, following modular design and environment isolation for **stage**.
 
 ---
 
-## ÌøóÔ∏è Architecture
+## ÌøóÔ∏è Architecture (Stage)
 
 ### Application Layer
 - Application Load Balancer (ALB)
@@ -52,28 +55,28 @@ The **entire AWS infrastructure is designed and deployed using Terraform**, foll
 
 ## Ìª†Ô∏è Tech Stack
 
-- **Cloud:** AWS
-- **IaC:** Terraform
-- **Compute:** EC2
-- **Load Balancer:** Application Load Balancer (ALB)
-- **Database:** Amazon RDS (MySQL)
-- **Application:** Node.js, Express
-- **Monitoring:** CloudWatch
-- **Alerting:** SNS
+- **Cloud:** AWS  
+- **Infrastructure as Code:** Terraform  
+- **Compute:** EC2  
+- **Load Balancer:** Application Load Balancer (ALB)  
+- **Database:** Amazon RDS (MySQL)  
+- **Application:** Node.js, Express  
+- **Monitoring:** CloudWatch  
+- **Alerting:** SNS  
 
 ---
 
-## ÌæØ Project Goals
+## ÌæØ Stage Environment Goals
 
-- Deploy a **working 2-tier application on AWS**
-- Use **Terraform with a modular structure**
-- Follow **AWS networking & security best practices**
-- Enable **monitoring and alerting**
+- Validate infrastructure changes before production
+- Test application deployments safely
+- Verify networking and security configurations
+- Test monitoring and alerting behavior
 - Practice **real-world DevOps troubleshooting**
 
 ---
 
-## Ì∑© Terraform Structure
+## Ì∑© Terraform Structure (Stage)
 
 ```text
 terraform/
@@ -94,10 +97,9 @@ terraform/
 ‚îú‚îÄ‚îÄ variables.tf
 ‚îú‚îÄ‚îÄ outputs.tf
 ‚îî‚îÄ‚îÄ main.tf
+```
 
-```  
-
-## ‚öôÔ∏è High-Level Deployment Flow
+## ‚öôÔ∏è High-Level Deployment Flow (Stage)
 
 1. Create VPC with public and private subnets
 2. Configure Internet Gateway, NAT Gateway, and route tables
@@ -111,7 +113,7 @@ terraform/
 
 ---
 
-## Ì∫® Common Issues Covered
+## Ì∫® Common Issues Tested in Stage
 
 | Issue | Description |
 |------|------------|
@@ -123,25 +125,35 @@ terraform/
 
 ---
 
-## ÔøΩÔøΩ Monitoring & Alerting
+## Ì≥ä Monitoring & Alerting
 
-- **CloudWatch Metrics**
-  - CPU Utilization
-  - Memory Usage
-  - Disk Usage
-  - EC2 Status Checks
-- **CloudWatch Alarms**
-- **SNS Email Notifications**
+### CloudWatch Metrics
+- CPU Utilization
+- Memory Usage
+- Disk Usage
+- EC2 Status Checks
+
+### Alerts
+- CloudWatch Alarms
+- SNS Email Notifications
 
 ---
 
-## Ì¥ê Security Highlights
+## Ì¥ê Security Highlights (Stage)
 
 - EC2 instances are **not publicly accessible**
 - ALB is the **only internet-facing component**
 - RDS accessible **only from the application layer**
-- Least-privilege Security Groups
+- Least-privilege Security Groups enforced
 
 ---
 
+## Ì∑† Purpose of Stage Environment
+
+The **stage environment** acts as a safety net before production:
+
+- Catch misconfigurations early
+- Test failure scenarios
+- Validate Terraform changes
+- Ensure production parity
 
