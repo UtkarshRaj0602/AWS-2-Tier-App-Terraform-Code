@@ -95,6 +95,8 @@ terraform/
 ├── outputs.tf
 └── main.tf
 
+```  
+
 ## ⚙️ High-Level Deployment Flow
 
 1. Create VPC with public and private subnets
