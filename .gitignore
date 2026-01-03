@@ -3,3 +3,4 @@
 .git
 .terraform/
 .terraform.*
+README.md
