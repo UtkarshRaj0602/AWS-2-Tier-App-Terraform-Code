@@ -1,1 +1,5 @@
-
+#Ignore the following files and folders in this directory
+*.tfstate
+.git
+.terraform/
+.terraform.*
