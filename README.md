@@ -4,7 +4,7 @@
 
 This project demonstrates a **production-style AWS 2-Tier architecture** built using **Terraform** and DevOps best practices.
 
-A **Node.js + Express + MySQL application** runs on **EC2 instances in private subnets**, exposed via an **Application Load Balancer (ALB)** and connected securely to **Amazon RDS**.  
+A **Node.js + Express + ejs + MySQL application** runs on **EC2 instances in private subnets**, exposed via an **Application Load Balancer (ALB)** and connected securely to **Amazon RDS**.  
 Monitoring, alerting, and secure networking are included.
 
 ---
@@ -13,14 +13,14 @@ Monitoring, alerting, and secure networking are included.
 
 The application used in this project is based on the following public GitHub repository:
 
-**bezkoder/nodejs-express-mysql**  
-https://github.com/bezkoder/nodejs-express-mysql
+**s-a-zhd/Hospital-Management-Using-NodeJs-Mysql-Express**  
+https://github.com/s-a-zhd/Hospital-Management-Using-NodeJs-Mysql-Express.git
 
 ### Application Stack
 - Node.js
 - Express.js
+- ejs
 - MySQL
-- REST API–based backend
 
  **Note:**  
 Only the **application code and setup** are referenced from this repo.  
@@ -39,7 +39,7 @@ The **entire AWS infrastructure is designed and deployed using Terraform**, foll
 ### Application Layer
 - Application Load Balancer (ALB)
 - EC2 instances (private subnets)
-- Node.js + Express application
+- Node.js + Express + ejs application
 - ALB health checks
 
 ### Database Layer
