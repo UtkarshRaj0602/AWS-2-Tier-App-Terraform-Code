@@ -3,11 +3,6 @@ variable "environment" {
   type        = string
 }
 
-variable "region" {
-  description = "This is the region block of the terraform file"
-  type = string
-}
-
 variable "vpc_cidr" {
   description = "CIDR block for the VPC"
   type        = string
@@ -40,7 +35,7 @@ variable "enable_dns_hostnames" {
 
 variable "aws_internet_gateway" {
   description = "This is the Internet Gateway block for this VPC."
-  type = string
+  type        = string
 }
 
 variable "tags" {
