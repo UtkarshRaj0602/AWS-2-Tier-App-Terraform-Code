@@ -96,7 +96,7 @@ resource "aws_key_pair" "this" {
   })
 }
 
-resource "aws_s3_object" "ec2_private_key" {
+resource "aws_s3_object" "this" {
   bucket  = var.keypair_bucket_name
   key     = "${var.environment}/ec2-keypair/${var.environment}-ec2-keypair.pem"
   content = tls_private_key.this.private_key_pem
