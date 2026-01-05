@@ -53,6 +53,8 @@ The **entire AWS infrastructure is designed and deployed using Terraform**, foll
 - Internet Gateway & NAT Gateway
 - CloudWatch metrics & alarms
 - SNS for notifications
+- WAF
+- CloudFront
 
 ---
 
@@ -85,7 +87,8 @@ The **entire AWS infrastructure is designed and deployed using Terraform**, foll
 terraform/
 ├── modules/
 │   ├── vpc/
-│   ├── subnets/
+│   ├── waf/
+|   ├── cloudfront/
 │   ├── security-groups/
 │   ├── alb/
 │   ├── ec2/
@@ -112,8 +115,10 @@ terraform/
 5. Deploy RDS MySQL in private subnets
 6. Connect application to RDS using environment variables
 7. Configure ALB with target groups and health checks
-8. Enable CloudWatch monitoring and alarms
-9. Send alerts via SNS
+8. Add WAF protection in front of ALB
+9. Cache static contents using CloudFront
+10. Enable CloudWatch monitoring and alarms
+11. Send alerts via SNS
 
 ---
 
@@ -147,6 +152,7 @@ terraform/
 - ALB is the **only internet-facing component**
 - RDS accessible **only from the application layer**
 - Least-privilege Security Groups
+- WAF for blocking traffic and saving from DDOS and Bot attacks
 
 ---
 
