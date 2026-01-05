@@ -32,7 +32,7 @@ The **entire AWS infrastructure is designed and deployed using Terraform**, foll
 
 ---
 
-<img width="3891" height="1523" alt="AWS-2-Tier-App-Architecture-Diagram" src="https://github.com/user-attachments/assets/0d9f6ef4-e3af-4f0f-9fb2-818b19c72d5f" />
+<img width="3891" height="1523" alt="AWS-2-Tier-App-Architecture-Diagram-Hospital-Management-App" src="https://github.com/user-attachments/assets/859cf7e9-2267-4678-83ab-fa13d4f0ebd4" />
 
 ---
 
