@@ -44,3 +44,39 @@ module "ec2" {
   }
 }
 
+module "rds" {
+  source = "../../modules/rds"
+
+  environment                = "stage"
+  vpc_id                     = module.vpc.vpc_id
+  private_subnet_ids         = [module.vpc.private_subnet_ids[0]]
+  allowed_security_group_ids = [module.ec2.aws_security_group_ids]
+
+  engine         = "mysql"
+  engine_version = "8.4.7"
+  instance_class = "db.t3.micro"
+
+  db_name  = "stage_db"
+  username = "admin"
+  password = "Stage@1234"
+
+  allocated_storage            = 20
+  storage_type                 = "gp3"
+  storage_encrypted            = false
+  multi_az                     = false
+  publicly_accessible          = false
+  backup_retention_period      = 7
+  skip_final_snapshot          = true
+  performance_insights_enabled = true
+  monitoring_interval          = 60
+  monitoring_role_arn          = "arn:aws:iam::051826706795:role/RDS-Enhanced-Monitoring-IAM-ROLE"
+  auto_minor_version_upgrade   = false
+  maintenance_window           = "sat:12:00-sat:12:30"
+  deletion_protection          = false
+
+  tags = {
+    Project     = "AWS-2-Tier-App"
+    Environment = "Stage"
+  }
+}
+

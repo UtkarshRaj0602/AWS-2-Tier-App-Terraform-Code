@@ -3,19 +3,23 @@
 ######################################################
 
 output "vpc_id" {
-  value = module.vpc.vpc_id
+  description = "VPC ID"
+  value       = module.vpc.vpc_id
 }
 
 output "vpc_cidr" {
-  value = module.vpc.vpc_cidr
+  description = "VPC CIDR"
+  value       = module.vpc.vpc_cidr
 }
 
 output "public_subnet_ids" {
-  value = module.vpc.public_subnet_ids
+  description = "VPC - Public Subnet IDs"
+  value       = module.vpc.public_subnet_ids
 }
 
 output "private_subnet_ids" {
-  value = module.vpc.private_subnet_ids
+  description = "VPC - Private Subnet IDs"
+  value       = module.vpc.private_subnet_ids
 }
 
 ######################################################
@@ -31,3 +35,27 @@ output "aws_instance_private_ips" {
   description = "AWS EC2 Instance Private IP"
   value       = module.ec2.aws_instance_private_ips
 }
+
+######################################################
+################ RDS MODULE OUTPUTS ##################
+######################################################
+
+output "aws_db_instance_id" {
+  description = "RDS Instance ID"
+  value       = module.rds.aws_db_instance_id
+}
+
+output "aws_db_instance_arn" {
+  description = "RDS Instance ARN"
+  value       = module.rds.aws_db_instance_arn
+}
+
+output "aws_db_endpoint" {
+  description = "RDS Instance Endpoint"
+  value       = module.rds.aws_db_endpoint
+}
+
+######################################################
+################ ALB MODULE OUTPUTS ##################
+######################################################
+
