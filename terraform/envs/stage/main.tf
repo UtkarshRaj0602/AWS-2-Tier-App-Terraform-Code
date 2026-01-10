@@ -28,6 +28,8 @@ module "ec2" {
 
   user_data = file("${path.module}/user_data.sh")
 
+  alb_security_group_id = module.alb.alb_security_group_id
+
   iam_instance_profile = "EC2-SSM-Role"
   allowed_ingress_cidr = [module.vpc.vpc_cidr]
   http_ingress_cidrs   = ["0.0.0.0/0"]
@@ -88,6 +90,7 @@ module "alb" {
   subnet_ids  = module.vpc.public_subnet_ids
   name        = "App"
   internal    = false
+  target_type = "instance"
 
   enable_deletion_protection = false
   access_logs_enabled        = true

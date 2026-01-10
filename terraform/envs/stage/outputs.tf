@@ -84,6 +84,26 @@ output "aws_lb_zone_id" {
   value       = module.alb.aws_lb_zone_id
 }
 
+output "aws_lb_target_group_arn" {
+  description = "ARN of the Target Group"
+  value       = module.alb.aws_lb_target_group_arn
+}
+
+output "aws_lb_target_group_id" {
+  description = "ARN of the Target Group"
+  value       = module.alb.aws_lb_target_group_id
+}
+
+output "aws_lb_target_group_name" {
+  description = "Name of the target group"
+  value       = module.alb.aws_lb_target_group_name
+}
+
+output "aws_lb_target_group_load_balancer_arns" {
+  description = "List of load balancer ARNs associated with the target group"
+  value       = module.alb.aws_lb_target_group_load_balancer_arns
+}
+
 ######################################################
 ################ WAF MODULE OUTPUTS ##################
 ######################################################
