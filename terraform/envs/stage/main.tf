@@ -80,3 +80,36 @@ module "rds" {
   }
 }
 
+module "alb" {
+  source = "../../modules/alb"
+
+  environment = "stage"
+  vpc_id      = module.vpc.vpc_id
+  subnet_ids  = module.vpc.public_subnet_ids
+  name        = "App"
+  internal    = false
+
+  enable_deletion_protection = false
+  access_logs_enabled        = true
+  access_logs_bucket         = "hospital-management-app-alb-access-logs-bucket"
+  access_logs_prefix         = "stage/"
+
+  enable_http = true
+  # enable_https = true
+  # certificate_arn = "arn:aws:acm:ap-south-1:051826706795:certificate/your-certificate-id"
+
+  idle_timeout          = 60
+  target_group_port     = 80
+  target_group_protocol = "HTTP"
+  health_check_path     = "/"
+  health_check_interval = 30
+  health_check_timeout  = 5
+  healthy_threshold     = 5
+  unhealthy_threshold   = 2
+  matcher_http_code     = "200-399"
+
+  tags = {
+    Project     = "AWS-2-Tier-App"
+    Environment = "Stage"
+  }
+}
