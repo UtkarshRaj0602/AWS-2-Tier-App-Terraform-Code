@@ -116,3 +116,30 @@ module "alb" {
     Environment = "Stage"
   }
 }
+
+module "waf" {
+  source = "../../modules/waf"
+
+  environment = "stage"
+
+  name        = "app"
+  description = "This is a Stage environment WAF Web ACL"
+  scope       = "REGIONAL"
+
+  default_action = "allow"
+
+  resource_arn = module.alb.aws_lb_arn
+
+  enable_aws_managed_rules   = true
+  enable_rate_limit_rule     = true
+  enable_logging             = true
+  log_destination_arn        = "arn:aws:logs:ap-south-1:051826706795:log-group:stage-app-waf-web-acl-log-group:*"
+  cloudwatch_metrics_enabled = true
+  metric_name                = "stage-app-waf"
+  sampled_requests_enabled   = false
+
+  tags = {
+    Project     = "AWS-2-Tier-App"
+    Environment = "Stage"
+  }
+}
