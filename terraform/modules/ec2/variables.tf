@@ -1,5 +1,5 @@
 variable "environment" {
-  description = "Environment Name - Stage"
+  description = "Environment Name"
   type        = string
 }
 
@@ -79,6 +79,23 @@ variable "root_volume_encrypted" {
   description = "Encrypt root EBS volume"
   type        = bool
   default     = false
+}
+
+variable "aws_lb_target_group_arn" {
+  description = "ARN of the target group to attach to the ALB"
+  type = string
+  default = null
+}
+
+variable "aws_lb_target_group_http_port" {
+  description = "HTTP port number of target group"
+  type = number
+  default = 80
+}
+
+variable "alb_security_group_id" {
+  description = "ID of ALB security group"
+  type = string
 }
 
 variable "tags" {

@@ -1,5 +1,5 @@
 variable "environment" {
-  description = "Environment Name - Stage"
+  description = "Environment Name"
   type        = string
 }
 
@@ -49,10 +49,10 @@ variable "password" {
   sensitive   = true
 }
 
-variable "parameter_group_name" {
-  description = "RDS Parameter Group Name"
-  type        = string
-}
+# variable "parameter_group_name" {
+#   description = "RDS Parameter Group Name"
+#   type        = string
+# }
 
 variable "allocated_storage" {
   description = "Allocated Storage of the RDS Engine"
@@ -66,17 +66,20 @@ variable "storage_type" {
 
 variable "storage_encrypted" {
   description = "Enable storage encryption"
-  type        = boolean
+  type        = bool
+  default     = false
 }
 
 variable "multi_az" {
   description = "Enable Multi-AZ deployment"
-  type        = boolean
+  type        = bool
+  default     = false
 }
 
 variable "publicly_accessible" {
   description = "Whether DB is publicly accessible"
-  type        = boolean
+  type        = bool
+  default     = false
 }
 
 variable "backup_retention_period" {
@@ -87,46 +90,49 @@ variable "backup_retention_period" {
 variable "skip_final_snapshot" {
   description = "Final snapshot of RDS database instance taken before terminating"
   type        = bool
+  default     = false
 }
 
-variable "availability_zone" {
-  description = "Availability Zone in which the RDS will be launched"
-  type = string
-}
+# variable "availability_zone" {
+#   description = "Availability Zone in which the RDS will be launched"
+#   type        = string
+# }
 
-variable "ca_cert_identifier" {
-  description = "Certificate_Authority of RDS Instance"
-  type = string
-}
+# variable "ca_cert_identifier" {
+#   description = "Certificate_Authority of RDS Instance"
+#   type        = string
+# }
 
 variable "performance_insights_enabled" {
   description = "Enable performance insights for RDS"
-  type = bool
+  type        = bool
+  default     = false
 }
 
 variable "monitoring_interval" {
   description = "Monitoring Interval for RDS performance insights"
-  type = number
+  type        = number
 }
 
-variable "enabled_cloudwatch_logs_exports" {
-  description = "RDS cloudwatch logging"
-  type = list(string)
-}
+# variable "enabled_cloudwatch_logs_exports" {
+#   description = "RDS cloudwatch logging"
+#   type        = list(string)
+# }
 
-variable "option_group_name" {
-  description = "RDS Option Group Name"
-  type        = string
-}
+# variable "option_group_name" {
+#   description = "RDS Option Group Name"
+#   type        = string
+# }
 
-variable "kms_key_id" {
-  description = "KMS key id to be used for RDS"
-  type = string
-}
+# variable "kms_key_id" {
+#   description = "KMS key id to be used for RDS"
+#   type        = string
+# }
 
 variable "auto_minor_version_upgrade" {
-    description = "Enable auto minor version upgrade for RDS"
-    type        = bool
+  description = "Enable auto minor version upgrade for RDS"
+  type        = bool
+  default     = false
 }
 
 variable "maintenance_window" {
@@ -135,8 +141,15 @@ variable "maintenance_window" {
 }
 
 variable "deletion_protection" {
-    description = "Enable deletion protection for RDS"
-    type        = bool
+  description = "Enable deletion protection for RDS"
+  type        = bool
+  default     = false
+}
+
+variable "monitoring_role_arn" {
+  description = "Existing IAM role ARN for RDS Enhanced Monitoring"
+  type        = string
+  default     = null
 }
 
 variable "tags" {

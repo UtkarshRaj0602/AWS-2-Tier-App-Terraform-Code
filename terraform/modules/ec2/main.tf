@@ -108,3 +108,22 @@ resource "aws_s3_object" "this" {
     Environment = var.environment
   })
 }
+
+resource "aws_lb_target_group_attachment" "this" {
+  count            = var.aws_lb_target_group_arn != null ? length(aws_instance.this) : 0
+  target_group_arn = var.aws_lb_target_group_arn
+  target_id        = aws_instance.this[count.index].id
+  port             = var.aws_lb_target_group_http_port
+}
+
+resource "aws_security_group_rule" "alb_to_ec2_ingress" {
+  count = var.alb_security_group_id != null ? 1 : 0
+
+  type                     = "ingress"
+  from_port                = var.aws_lb_target_group_http_port
+  to_port                  = var.aws_lb_target_group_http_port
+  protocol                 = "tcp"
+  source_security_group_id = var.alb_security_group_id
+  security_group_id        = aws_security_group.this.id
+}
+
