@@ -1,146 +1,131 @@
 module "vpc" {
   source = "../../modules/vpc"
 
-  environment          = "stage"
-  vpc_cidr             = "10.0.0.0/16"
-  availability_zones   = ["ap-south-1a", "ap-south-1b", "ap-south-1c"]
-  public_subnet_cidrs  = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
-  private_subnet_cidrs = ["10.0.4.0/24", "10.0.5.0/24", "10.0.6.0/24"]
-  enable_dns_support   = true
-  enable_dns_hostnames = true
-  aws_internet_gateway = "igw"
+  environment          = var.environment
+  vpc_cidr             = var.vpc_cidr
+  availability_zones   = var.availability_zones
+  public_subnet_cidrs  = var.public_subnet_cidrs
+  private_subnet_cidrs = var.private_subnet_cidrs
+  enable_dns_support   = var.enable_dns_support
+  enable_dns_hostnames = var.enable_dns_hostnames
+  aws_internet_gateway = var.aws_internet_gateway
 
-  tags = {
-    Project     = "AWS-2-Tier-App"
-    Environment = "Stage"
-  }
+  tags = var.tags
 }
 
 module "ec2" {
   source = "../../modules/ec2"
 
-  environment    = "stage"
+  environment    = var.environment
   vpc_id         = module.vpc.vpc_id
   subnet_id      = module.vpc.private_subnet_ids[0]
-  ami_id         = "ami-00ca570c1b6d79f36"
-  instance_type  = "t3a.micro"
-  instance_count = 1
+  ami_id         = var.ami_id
+  instance_type  = var.instance_type
+  instance_count = var.instance_count
 
   user_data = file("${path.module}/user_data.sh")
 
   alb_security_group_id = module.alb.alb_security_group_id
 
-  iam_instance_profile = "EC2-SSM-Role"
+  iam_instance_profile = var.iam_instance_profile
   allowed_ingress_cidr = [module.vpc.vpc_cidr]
-  http_ingress_cidrs   = ["0.0.0.0/0"]
-  https_ingress_cidrs  = ["0.0.0.0/0"]
-  keypair_bucket_name  = "practice-terraform-states-bucket"
+  http_ingress_cidrs   = var.http_ingress_cidrs
+  https_ingress_cidrs  = var.https_ingress_cidrs
+  keypair_bucket_name  = var.keypair_bucket_name
 
-  root_volume_size      = 30
-  root_volume_type      = "gp3"
-  root_volume_encrypted = false
+  root_volume_size      = var.root_volume_size
+  root_volume_type      = var.root_volume_type
+  root_volume_encrypted = var.root_volume_encrypted
 
-  tags = {
-    Project     = "AWS-2-Tier-App"
-    Environment = "Stage"
-  }
+  tags = var.tags
 }
 
 module "rds" {
   source = "../../modules/rds"
 
-  environment                = "stage"
+  environment                = var.environment
   vpc_id                     = module.vpc.vpc_id
   private_subnet_ids         = [module.vpc.private_subnet_ids[0]]
   allowed_security_group_ids = [module.ec2.aws_security_group_ids]
 
-  engine         = "mysql"
-  engine_version = "8.4.7"
-  instance_class = "db.t3.micro"
+  engine         = var.engine
+  engine_version = var.engine_version
+  instance_class = var.instance_class
 
-  db_name  = "stage_db"
-  username = "admin"
-  password = "Stage@1234"
+  db_name  = var.db_name
+  username = var.username
+  password = var.password
 
-  allocated_storage            = 20
-  storage_type                 = "gp3"
-  storage_encrypted            = false
-  multi_az                     = false
-  publicly_accessible          = false
-  backup_retention_period      = 7
-  skip_final_snapshot          = true
-  performance_insights_enabled = true
-  monitoring_interval          = 60
-  monitoring_role_arn          = "arn:aws:iam::051826706795:role/RDS-Enhanced-Monitoring-IAM-ROLE"
-  auto_minor_version_upgrade   = false
-  maintenance_window           = "sat:12:00-sat:12:30"
-  deletion_protection          = false
+  allocated_storage            = var.allocated_storage
+  storage_type                 = var.storage_type
+  storage_encrypted            = var.storage_encrypted
+  multi_az                     = var.multi_az
+  publicly_accessible          = var.publicly_accessible
+  backup_retention_period      = var.backup_retention_period
+  skip_final_snapshot          = var.skip_final_snapshot
+  performance_insights_enabled = var.performance_insights_enabled
+  monitoring_interval          = var.monitoring_interval
+  monitoring_role_arn          = var.monitoring_role_arn
+  auto_minor_version_upgrade   = var.auto_minor_version_upgrade
+  maintenance_window           = var.maintenance_window
+  deletion_protection          = var.deletion_protection
 
-  tags = {
-    Project     = "AWS-2-Tier-App"
-    Environment = "Stage"
-  }
+  tags = var.tags
 }
 
 module "alb" {
   source = "../../modules/alb"
 
-  environment = "stage"
+  environment = var.environment
   vpc_id      = module.vpc.vpc_id
   subnet_ids  = module.vpc.public_subnet_ids
-  name        = "App"
-  internal    = false
-  target_type = "instance"
+  name        = var.alb_name
+  internal    = var.internal
+  target_type = var.target_type
 
-  enable_deletion_protection = false
-  access_logs_enabled        = true
-  access_logs_bucket         = "hospital-management-app-alb-access-logs-bucket"
-  access_logs_prefix         = "stage/"
+  enable_deletion_protection = var.enable_deletion_protection
+  access_logs_enabled        = var.access_logs_enabled
+  access_logs_bucket         = var.access_logs_bucket
+  access_logs_prefix         = var.access_logs_prefix
 
-  enable_http = true
+  enable_http = var.enable_http
   # enable_https = true
   # certificate_arn = "arn:aws:acm:ap-south-1:051826706795:certificate/your-certificate-id"
 
-  idle_timeout          = 60
-  target_group_port     = 80
-  target_group_protocol = "HTTP"
-  health_check_path     = "/"
-  health_check_interval = 30
-  health_check_timeout  = 5
-  healthy_threshold     = 5
-  unhealthy_threshold   = 2
-  matcher_http_code     = "200-399"
+  idle_timeout          = var.idle_timeout
+  target_group_port     = var.target_group_port
+  target_group_protocol = var.target_group_protocol
+  health_check_path     = var.health_check_path
+  health_check_interval = var.health_check_interval
+  health_check_timeout  = var.health_check_timeout
+  healthy_threshold     = var.healthy_threshold
+  unhealthy_threshold   = var.unhealthy_threshold
+  matcher_http_code     = var.matcher_http_code
 
-  tags = {
-    Project     = "AWS-2-Tier-App"
-    Environment = "Stage"
-  }
+  tags = var.tags
 }
 
 module "waf" {
   source = "../../modules/waf"
 
-  environment = "stage"
+  environment = var.environment
 
-  name        = "app"
-  description = "This is a Stage environment WAF Web ACL"
-  scope       = "REGIONAL"
+  name        = var.waf_name
+  description = var.description
+  scope       = var.scope
 
-  default_action = "allow"
+  default_action = var.default_action
 
   resource_arn = module.alb.aws_lb_arn
 
-  enable_aws_managed_rules   = true
-  enable_rate_limit_rule     = true
-  enable_logging             = true
-  log_destination_arn        = "arn:aws:logs:ap-south-1:051826706795:log-group:stage-app-waf-web-acl-log-group:*"
-  cloudwatch_metrics_enabled = true
-  metric_name                = "stage-app-waf"
-  sampled_requests_enabled   = false
+  enable_aws_managed_rules   = var.enable_aws_managed_rules
+  enable_rate_limit_rule     = var.enable_rate_limit_rule
+  enable_logging             = var.enable_logging
+  log_destination_arn        = var.log_destination_arn
+  cloudwatch_metrics_enabled = var.cloudwatch_metrics_enabled
+  metric_name                = var.metric_name
+  sampled_requests_enabled   = var.sampled_requests_enabled
 
-  tags = {
-    Project     = "AWS-2-Tier-App"
-    Environment = "Stage"
-  }
+  tags = var.tags
 }
 
