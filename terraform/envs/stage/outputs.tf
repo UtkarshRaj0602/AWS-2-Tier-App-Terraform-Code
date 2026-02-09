@@ -104,6 +104,7 @@ output "aws_lb_target_group_load_balancer_arns" {
   value       = module.alb.aws_lb_target_group_load_balancer_arns
 }
 
+
 ######################################################
 ################ WAF MODULE OUTPUTS ##################
 ######################################################

@@ -52,3 +52,8 @@ output "aws_lb_target_group_load_balancer_arns" {
   description = "List of load balancer ARNs associated with the target group"
   value       = aws_lb_target_group.this.load_balancer_arns
 }
+
+output "target_group_arn" {
+  description = "Target group ARN of ALB"
+  value       = aws_lb_target_group.this.arn
+}

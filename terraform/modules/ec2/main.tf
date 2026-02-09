@@ -110,15 +110,15 @@ resource "aws_s3_object" "this" {
 }
 
 resource "aws_lb_target_group_attachment" "this" {
-  count            = var.aws_lb_target_group_arn != null ? length(aws_instance.this) : 0
+  count            = length(aws_instance.this)
   target_group_arn = var.aws_lb_target_group_arn
   target_id        = aws_instance.this[count.index].id
   port             = var.aws_lb_target_group_http_port
 }
 
 resource "aws_security_group_rule" "alb_to_ec2_ingress" {
-  depends_on = [aws_security_group.alb_sg]
-  # count      = var.alb_security_group_id != null ? 1 : 0
+  # depends_on = [aws_security_group.alb_sg]
+  # count = var.alb_security_group_id != null ? 1 : 0
   # for_each = var.alb_security_group_id == null ? {} : {
   #   alb = var.alb_security_group_id
   # }

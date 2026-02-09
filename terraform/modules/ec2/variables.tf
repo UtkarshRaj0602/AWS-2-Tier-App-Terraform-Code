@@ -83,21 +83,20 @@ variable "root_volume_encrypted" {
 
 variable "aws_lb_target_group_arn" {
   description = "ARN of the target group to attach to the ALB"
-  type = string
-  default = null
+  type        = string
+  default     = null
 }
 
 variable "aws_lb_target_group_http_port" {
   description = "HTTP port number of target group"
-  type = number
-  default = 80
+  type        = number
+  default     = 80
 }
 
 variable "alb_security_group_id" {
   description = "ID of ALB security group"
-  type = string
+  type        = string
 }
-
 variable "tags" {
   description = "A map of tags to add to all resources"
   type        = map(string)

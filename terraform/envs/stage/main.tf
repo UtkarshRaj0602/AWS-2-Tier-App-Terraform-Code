@@ -25,7 +25,8 @@ module "ec2" {
 
   user_data = file("${path.module}/user_data.sh")
 
-  alb_security_group_id = module.alb.alb_security_group_id
+  alb_security_group_id   = module.alb.alb_security_group_id
+  aws_lb_target_group_arn = module.alb.target_group_arn
 
   iam_instance_profile = var.iam_instance_profile
   allowed_ingress_cidr = [module.vpc.vpc_cidr]
