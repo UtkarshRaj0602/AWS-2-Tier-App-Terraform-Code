@@ -117,7 +117,11 @@ resource "aws_lb_target_group_attachment" "this" {
 }
 
 resource "aws_security_group_rule" "alb_to_ec2_ingress" {
-  count = var.alb_security_group_id != null ? 1 : 0
+  depends_on = [aws_security_group.alb_sg]
+  # count      = var.alb_security_group_id != null ? 1 : 0
+  # for_each = var.alb_security_group_id == null ? {} : {
+  #   alb = var.alb_security_group_id
+  # }
 
   type                     = "ingress"
   from_port                = var.aws_lb_target_group_http_port
