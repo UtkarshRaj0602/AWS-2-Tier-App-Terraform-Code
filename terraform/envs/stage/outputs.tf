@@ -104,6 +104,10 @@ output "aws_lb_target_group_load_balancer_arns" {
   value       = module.alb.aws_lb_target_group_load_balancer_arns
 }
 
+output "target_group_arn" {
+  description = "Target group ARN of ALB"
+  value       = module.alb.target_group_arn
+}
 
 ######################################################
 ################ WAF MODULE OUTPUTS ##################
@@ -135,6 +139,24 @@ output "aws_wafv2_web_acl_association_id" {
 }
 
 ######################################################
-############# CloudWatch MODULE OUTPUTS ##############
+################ SNS MODULE OUTPUTS ##################
+######################################################
+
+output "sns_topic_id" {
+  description = "ID of the SNS topic"
+  value       = module.sns.sns_topic_id
+}
+output "sns_topic_arn" {
+  description = "ARN of the SNS topic"
+  value       = module.sns.sns_topic_arn
+}
+
+output "sns_topic_name" {
+  description = "Name of the SNS topic"
+  value       = module.sns.sns_topic_name
+}
+
+######################################################
+############ CLOUDWATCH MODULE OUTPUTS ###############
 ######################################################
 

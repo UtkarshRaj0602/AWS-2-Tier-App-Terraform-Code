@@ -130,3 +130,13 @@ module "waf" {
   tags = var.tags
 }
 
+module "sns" {
+  source = "../../modules/sns"
+
+  environment = var.environment
+  topic_name  = var.topic_name
+
+  email_subscriptions = var.email_subscriptions
+
+  tags = var.tags
+}

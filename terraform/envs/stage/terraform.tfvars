@@ -108,3 +108,15 @@ log_destination_arn        = "arn:aws:logs:ap-south-1:051826706795:log-group:sta
 cloudwatch_metrics_enabled = true
 metric_name                = "stage-app-waf"
 sampled_requests_enabled   = false
+
+#########################
+###########SNS###########
+#########################
+
+topic_name          = "stage-sns"
+email_subscriptions = ["utkarsh.r@cloudworkmates.com"]
+
+#########################
+#######CLOUDWATCH########
+#########################
+

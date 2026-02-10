@@ -364,3 +364,20 @@ variable "sampled_requests_enabled" {
   description = "sampled_requests_enabled/disabled for WAF"
   type        = string
 }
+
+##############################################
+########### MODULE - SNS Variables ###########
+##############################################
+
+variable "topic_name" {
+  description = "SNS Topic Name - Standard SNS Topic"
+  type        = string
+}
+
+variable "email_subscriptions" {
+  description = "Email Subscriptions for SNS topic"
+  type        = list(string)
+}
+
+
+
