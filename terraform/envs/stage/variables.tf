@@ -301,6 +301,16 @@ variable "unhealthy_threshold" {
   type        = number
 }
 
+variable "tg_health_check_timeout" {
+  description = "Timeout of load balancer target group health check"
+  type        = number
+}
+
+variable "tg_health_check_interval" {
+  description = "Interval of load balancer target group health check"
+  type        = number
+}
+
 variable "matcher_http_code" {
   description = "matcher_http_code for ALB"
   type        = string
@@ -379,5 +389,26 @@ variable "email_subscriptions" {
   type        = list(string)
 }
 
+##############################################
+####### MODULE - CLOUDWATCH Variables ########
+##############################################
 
+# variable "sns_topic_arn" {
+#   description = "SNS topic ARN for CloudWatch alarms"
+#   type        = string
+# }
 
+# variable "ec2_instance_ids" {
+#   description = "EC2 instance IDs for alarms"
+#   type        = list(string)
+# }
+
+# variable "alb_arn_suffix" {
+#   description = "ALB ARN suffix"
+#   type        = string
+# }
+
+# variable "rds_instance_id" {
+#   description = "RDS instance identifier"
+#   type        = string
+# }

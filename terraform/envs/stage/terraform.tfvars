@@ -48,7 +48,7 @@ instance_class = "db.t3.micro"
 
 db_name  = "stage_db"
 username = "admin"
-password = "Stage@1234"
+password = "Stage1234"
 
 allocated_storage            = 20
 storage_type                 = "gp3"
@@ -57,7 +57,7 @@ multi_az                     = false
 publicly_accessible          = false
 backup_retention_period      = 7
 skip_final_snapshot          = true
-performance_insights_enabled = true
+performance_insights_enabled = false
 monitoring_interval          = 60
 monitoring_role_arn          = "arn:aws:iam::051826706795:role/RDS-Enhanced-Monitoring-IAM-ROLE"
 auto_minor_version_upgrade   = false
@@ -73,23 +73,25 @@ internal    = false
 target_type = "instance"
 
 enable_deletion_protection = false
-access_logs_enabled        = true
+access_logs_enabled        = false
 access_logs_bucket         = "hospital-management-app-alb-access-logs-bucket"
-access_logs_prefix         = "stage/"
+access_logs_prefix         = "stage"
 
 enable_http = true
 # enable_https = true
 # certificate_arn = "arn:aws:acm:ap-south-1:051826706795:certificate/your-certificate-id"
 
-idle_timeout          = 60
-target_group_port     = 80
-target_group_protocol = "HTTP"
-health_check_path     = "/"
-health_check_interval = 30
-health_check_timeout  = 5
-healthy_threshold     = 5
-unhealthy_threshold   = 2
-matcher_http_code     = "200-399"
+idle_timeout             = 60
+target_group_port        = 80
+target_group_protocol    = "HTTP"
+health_check_path        = "/"
+health_check_interval    = 60
+health_check_timeout     = 30
+healthy_threshold        = 5
+unhealthy_threshold      = 2
+tg_health_check_timeout  = 30
+tg_health_check_interval = 60
+matcher_http_code        = "200-399"
 
 #########################
 ###########WAF###########
@@ -120,3 +122,4 @@ email_subscriptions = ["utkarsh.r@cloudworkmates.com"]
 #######CLOUDWATCH########
 #########################
 
+#Variables will be added using modules.

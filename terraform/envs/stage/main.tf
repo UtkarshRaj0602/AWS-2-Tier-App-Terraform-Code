@@ -46,7 +46,7 @@ module "rds" {
 
   environment                = var.environment
   vpc_id                     = module.vpc.vpc_id
-  private_subnet_ids         = [module.vpc.private_subnet_ids[0]]
+  private_subnet_ids         = [module.vpc.private_subnet_ids[0], module.vpc.private_subnet_ids[1]]
   allowed_security_group_ids = [module.ec2.aws_security_group_ids]
 
   engine         = var.engine
@@ -140,3 +140,16 @@ module "sns" {
 
   tags = var.tags
 }
+
+# module "cloudwatch" {
+#   source = "../../modules/cloudwatch"
+
+#   environment = var.environment
+
+#   sns_topic_arn    = module.sns.sns_topic_arn
+#   ec2_instance_ids = module.ec2.aws_instance_ids
+#   alb_arn_suffix   = module.alb.aws_lb_arn_suffix
+#   rds_instance_id  = module.rds.aws_db_instance_id
+
+#   tags = var.tags
+# }
