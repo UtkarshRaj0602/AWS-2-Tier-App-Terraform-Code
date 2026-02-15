@@ -60,12 +60,124 @@ cd $PROJECT_DIR
 npm install
 EOF
 
-# --- CREATING .env FILE ---
-echo "[EXTRA] - Creating .env file"
+####################
+#######EXTRAS#######
+####################
+
+# ---- INSTALL MYSQL CLIENT (AL2023) ----
+echo "[EXTRA] Installing MariaDB client..."
+dnf install -y mariadb105
+
+# ---- CREATE AND POPULATE .env FILE ----
+echo "[EXTRA] Creating and populating .env file..."
 sudo -u ${APP_USER} bash <<EOF
 cd $PROJECT_DIR
-touch .env
+cat <<EOT > .env
+DB_HOST=REPLACE_WITH_RDS_ENDPOINT
+DB_USER=admin
+DB_PASSWORD=REPLACE_WITH_PASSWORD
+DB_NAME=stage_db
+EOT
 EOF
+
+# ---- ENSURE DOTENV IS LOADED ----
+echo "[EXTRA] Ensuring dotenv is required..."
+sudo -u ${APP_USER} bash <<EOF
+cd $PROJECT_DIR
+grep -q "dotenv" app.js || sed -i '1irequire("dotenv").config();' app.js
+EOF
+
+# ---- FIX APP BIND ADDRESS ----
+echo "[EXTRA] Ensuring app listens on 0.0.0.0..."
+sudo -u ${APP_USER} bash <<EOF
+cd $PROJECT_DIR
+sed -i 's/app.listen(/app.listen(process.env.PORT || 3000, "0.0.0.0", /g' app.js || true
+EOF
+
+# ---- INSTALL PM2 ----
+echo "[EXTRA] Installing PM2..."
+npm install -g pm2
+
+# ---- START APP WITH PM2 ----
+echo "[EXTRA] Starting app with PM2..."
+sudo -u ${APP_USER} bash <<EOF
+cd $PROJECT_DIR
+pm2 start app.js --name hospital-app
+pm2 startup systemd -u ${APP_USER} --hp /home/${APP_USER}
+pm2 save
+EOF
+
+# ---- ADD HEALTH CHECK ENDPOINT ----
+echo "[EXTRA] Adding /health endpoint..."
+sudo -u ${APP_USER} bash <<EOF
+cd $PROJECT_DIR
+grep -q "/health" app.js || echo '
+app.get("/health", (req, res) => {
+  res.status(200).send("OK");
+});
+' >> app.js
+EOF
+
+###########Verification Script##############
+
+echo "=================================================="
+echo " Hospital App – EC2 Verification Script"
+echo "=================================================="
+
+echo
+echo "1️⃣ OS & USER"
+echo "--------------------------------------------------"
+whoami
+cat /etc/os-release | head -n 2
+
+echo
+echo "2️⃣ Node & NPM"
+echo "--------------------------------------------------"
+node -v || echo "❌ Node not installed"
+npm -v  || echo "❌ NPM not installed"
+
+echo
+echo "3️⃣ PM2 Status"
+echo "--------------------------------------------------"
+pm2 status || echo "❌ PM2 not running"
+
+echo
+echo "4️⃣ Application Process"
+echo "--------------------------------------------------"
+pm2 list | grep hospital-app || echo "❌ hospital-app not found in PM2"
+
+echo
+echo "5️⃣ App Port (3000)"
+echo "--------------------------------------------------"
+ss -tulpn | grep 3000 || echo "❌ App not listening on port 3000"
+
+echo
+echo "6️⃣ Health Endpoint"
+echo "--------------------------------------------------"
+curl -s -o /dev/null -w "%{http_code}\n" http://localhost:3000/health || echo "❌ Health endpoint not responding"
+
+echo
+echo "7️⃣ Environment Variables (.env)"
+echo "--------------------------------------------------"
+cd /var/www/html/Hospital-Management-Using-NodeJs-Mysql-Express || exit 1
+grep DB_HOST .env && grep DB_USER .env && grep DB_NAME .env || echo "❌ .env missing values"
+
+# echo
+# echo "8️⃣ Database Connectivity (via App Logs)"
+# echo "--------------------------------------------------"
+# pm2 logs hospital-app --lines 20 | grep -i "Database" || echo "⚠️ Check DB connection logs manually"
+
+echo
+echo "9️⃣ MySQL Client"
+echo "--------------------------------------------------"
+mysql --version || echo "❌ MySQL/MariaDB client not installed"
+
+echo
+echo "=================================================="
+echo " ✅ Verification Script Finished"
+echo "=================================================="
+
+##################33
 
 echo "==================================================================="
 echo " Setup completed successfully ✅"

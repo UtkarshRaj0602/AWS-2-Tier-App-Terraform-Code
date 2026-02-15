@@ -48,3 +48,12 @@ output "aws_security_group_arns" {
   value       = aws_security_group.this.arn
 }
 
+output "aws_custom_parameter_group_id" {
+  description = "Custom parameter group ID of RDS"
+  value       = aws_db_parameter_group.this.id
+}
+
+output "aws_custom_parameter_group_arn" {
+  description = "Custom parameter group ARN of RDS"
+  value       = aws_db_parameter_group.this.arn
+}

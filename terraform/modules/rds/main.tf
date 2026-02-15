@@ -21,7 +21,7 @@ resource "aws_db_instance" "this" {
   backup_retention_period = var.backup_retention_period
   skip_final_snapshot     = var.skip_final_snapshot
 
-  #   parameter_group_name            = var.parameter_group_name
+  parameter_group_name = aws_db_parameter_group.this.name
   #   availability_zone               = var.availability_zone
   #   option_group_name               = var.option_group_name
   #   kms_key_id                      = var.kms_key_id
@@ -70,4 +70,20 @@ resource "aws_security_group_rule" "mysql_ingress" {
   protocol                 = "tcp"
   security_group_id        = aws_security_group.this.id
   source_security_group_id = var.allowed_security_group_ids[count.index]
+}
+
+resource "aws_db_parameter_group" "this" {
+  name        = var.parameter_group_name
+  family      = var.parameter_group_family
+  description = var.parameter_group_description
+
+  # parameter {
+  #   name  = "default_authentication_plugin"
+  #   value = var.db_auth_plugin
+  # }
+
+  tags = merge(var.tags, {
+    "Name"        = "${var.environment}-rds-sg"
+    "Environment" = var.environment
+  })
 }

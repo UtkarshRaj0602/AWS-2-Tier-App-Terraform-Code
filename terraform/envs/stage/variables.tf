@@ -207,6 +207,21 @@ variable "deletion_protection" {
   type        = bool
 }
 
+variable "parameter_group_name" {
+  description = "Database Parameter Group Name"
+  type        = string
+}
+
+variable "parameter_group_family" {
+  description = "Database Parameter Group Family"
+  type        = string
+}
+
+variable "parameter_group_description" {
+  description = "Database Parameter Group Family"
+  type        = string
+}
+
 ##############################################
 ########### MODULE - ALB Variables ###########
 ##############################################
@@ -315,6 +330,16 @@ variable "matcher_http_code" {
   description = "matcher_http_code for ALB"
   type        = string
 }
+
+# variable "target_group_arn" {
+#   description = "Target Group ARN"
+#   type        = string
+# }
+
+# variable "target_id" {
+#   description = "Target Group ID"
+#   type        = string
+# }
 
 ##############################################
 ########### MODULE - WAF Variables ###########

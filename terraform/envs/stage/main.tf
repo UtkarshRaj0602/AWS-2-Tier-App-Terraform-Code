@@ -70,6 +70,11 @@ module "rds" {
   auto_minor_version_upgrade   = var.auto_minor_version_upgrade
   maintenance_window           = var.maintenance_window
   deletion_protection          = var.deletion_protection
+  parameter_group_name         = var.parameter_group_name
+  parameter_group_family       = var.parameter_group_family
+  parameter_group_description  = var.parameter_group_description
+  # db_parameter_group_name      = "stage-mysql-custom-pg"
+  # db_parameter_group_family    = "mysql8.0"
 
   tags = var.tags
 }
@@ -102,6 +107,8 @@ module "alb" {
   healthy_threshold     = var.healthy_threshold
   unhealthy_threshold   = var.unhealthy_threshold
   matcher_http_code     = var.matcher_http_code
+  # target_group_arn      = var.target_group_arn
+  target_id = module.ec2.aws_instance_ids[0]
 
   tags = var.tags
 }

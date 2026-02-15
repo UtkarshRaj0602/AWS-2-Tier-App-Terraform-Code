@@ -152,6 +152,27 @@ variable "monitoring_role_arn" {
   default     = null
 }
 
+variable "parameter_group_name" {
+  description = "Parameter group name of RDS"
+  type        = string
+}
+
+variable "parameter_group_family" {
+  description = "Family type of parameter group of RDS"
+  type        = string
+}
+
+variable "parameter_group_description" {
+  description = "Description of parameter group"
+  type        = string
+}
+
+variable "db_auth_plugin" {
+  description = "Default authentication plugin"
+  type        = string
+  default     = "mysql_native_password"
+}
+
 variable "tags" {
   description = "A map of tags to add to all resources"
   type        = map(string)

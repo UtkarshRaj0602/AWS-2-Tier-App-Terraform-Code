@@ -91,7 +91,6 @@ variable "target_type" {
 variable "target_group_port" {
   description = "Port on which target group will listen"
   type        = number
-  default     = 80
 }
 
 variable "target_group_protocol" {
@@ -132,20 +131,30 @@ variable "unhealthy_threshold" {
 
 variable "tg_health_check_timeout" {
   description = "Timeout of load balancer target group health check"
-  type        = string
+  type        = number
   default     = 30
 }
 
 variable "tg_health_check_interval" {
   description = "Interval of load balancer target group health check"
-  type        = string
-  default     = 30
+  type        = number
+  default     = 60
 }
 
 variable "matcher_http_code" {
   description = "HTTP codes to use when checking for a successful response from a target"
   type        = string
   default     = "200"
+}
+
+# variable "target_group_arn" {
+#   description = "Target Group ARN"
+#   type        = string
+# }
+
+variable "target_id" {
+  description = "Target Group ID"
+  type        = string
 }
 
 variable "tags" {

@@ -72,6 +72,16 @@ resource "aws_security_group_rule" "ingress_ssh" {
   security_group_id = aws_security_group.this.id
 }
 
+resource "aws_security_group_rule" "ingress_app" {
+  for_each          = toset(var.allowed_ingress_cidr)
+  type              = "ingress"
+  from_port         = 3000
+  to_port           = 3000
+  protocol          = "tcp"
+  cidr_blocks       = [each.value]
+  security_group_id = aws_security_group.this.id
+}
+
 resource "aws_security_group_rule" "egress_all" {
   type              = "egress"
   from_port         = 0

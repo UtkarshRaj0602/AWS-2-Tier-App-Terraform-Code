@@ -8,115 +8,88 @@ echo "==================================================================="
 echo " Hospital Management App Setup (EC2 User-Data | NodeJS + Express)"
 echo "==================================================================="
 
-# ---- VARIABLES ----
 PROJECT_DIR="/var/www/html/Hospital-Management-Using-NodeJs-Mysql-Express"
 NODE_VERSION="18"
-APP_USER="ec2-user"
+APP_USER="root"
 
-# ---- SYSTEM UPDATE ----
-echo "[1/7] Updating system..."
-yum update && yum upgrade -y
+############################
+# SYSTEM LEVEL (ROOT ONLY)
+############################
 
-# ---- INSTALL BASE PACKAGES ----
-echo "[2/7] Installing base packages..."
-yum install -y \
-  git \
-  unzip \
-  gzip \
-  gcc-c++ \
-  make
+echo "[1] Updating system..."
+dnf update -y
 
-# ---- INSTALL NODE.JS ----
-echo "[3/7] Installing Node.js ${NODE_VERSION}..."
+echo "[2] Installing base packages..."
+dnf install -y git unzip gzip gcc-c++ make mariadb105
+
+echo "[3] Installing Node.js..."
 curl -fsSL https://rpm.nodesource.com/setup_${NODE_VERSION}.x | bash -
-yum install -y nodejs
+dnf install -y nodejs
 
 echo "Node version: $(node -v)"
 echo "NPM version: $(npm -v)"
 
-# ---- INSTALL NODEMON ----
-echo "[4/7] Installing nodemon globally..."
-npm install -g nodemon
+############################
+# APPLICATION LEVEL (root)
+############################
 
-# ---- CREATE PROJECT DIRECTORY ----
-echo "[5/7] Preparing project directory..."
 mkdir -p /var/www/html
 chown -R ${APP_USER}:${APP_USER} /var/www
 
-# ---- CLONE PROJECT (IF NOT EXISTS) ----
-echo "[6/7] Cloning project repository..."
+sudo -u ${APP_USER} bash <<EOF
+
+cd /var/www/html
+
+echo "[4] Cloning repository..."
 if [ ! -d "$PROJECT_DIR" ]; then
-  sudo -u ${APP_USER} git clone \
-    https://github.com/s-a-zhd/Hospital-Management-Using-NodeJs-Mysql-Express.git \
-    "$PROJECT_DIR"
-else
-  echo "Project already exists, skipping clone."
+  git clone https://github.com/s-a-zhd/Hospital-Management-Using-NodeJs-Mysql-Express.git
 fi
 
-# ---- INSTALL NPM DEPENDENCIES AS ec2-user ----
-echo "[7/7] Installing npm dependencies..."
-sudo -u ${APP_USER} bash <<EOF
 cd $PROJECT_DIR
+
+echo "[5] Installing npm dependencies..."
 npm install
-EOF
+npm install dotenv
 
-####################
-#######EXTRAS#######
-####################
+echo "[6] Installing PM2 locally for ec2-user..."
+npm install -g pm2
 
-# ---- INSTALL MYSQL CLIENT (AL2023) ----
-echo "[EXTRA] Installing MariaDB client..."
-dnf install -y mariadb105 || dnf install -y mariadb
-
-# ---- CREATE AND POPULATE .env FILE ----
-echo "[EXTRA] Creating and populating .env file..."
-sudo -u ${APP_USER} bash <<EOF
-cd $PROJECT_DIR
+echo "[7] Creating .env file..."
 cat <<EOT > .env
 DB_HOST=REPLACE_WITH_RDS_ENDPOINT
 DB_USER=admin
 DB_PASSWORD=REPLACE_WITH_PASSWORD
 DB_NAME=stage_db
+PORT=3306
 EOT
-EOF
 
-# ---- ENSURE DOTENV IS LOADED ----
-echo "[EXTRA] Ensuring dotenv is required..."
-sudo -u ${APP_USER} bash <<EOF
-cd $PROJECT_DIR
+echo "[8] Ensuring dotenv is loaded..."
 grep -q "dotenv" app.js || sed -i '1irequire("dotenv").config();' app.js
-EOF
 
-# ---- FIX APP BIND ADDRESS ----
-echo "[EXTRA] Ensuring app listens on 0.0.0.0..."
-sudo -u ${APP_USER} bash <<EOF
-cd $PROJECT_DIR
+echo "[9] Ensuring app binds to 0.0.0.0..."
 sed -i 's/app.listen(/app.listen(process.env.PORT || 3000, "0.0.0.0", /g' app.js || true
-EOF
 
-# ---- INSTALL PM2 ----
-echo "[EXTRA] Installing PM2..."
-npm install -g pm2
-
-# ---- START APP WITH PM2 ----
-echo "[EXTRA] Starting app with PM2..."
-sudo -u ${APP_USER} bash <<EOF
-cd $PROJECT_DIR
-pm2 start app.js --name hospital-app
-pm2 startup systemd -u ${APP_USER} --hp /home/${APP_USER}
-pm2 save
-EOF
-
-# ---- ADD HEALTH CHECK ENDPOINT ----
-echo "[EXTRA] Adding /health endpoint..."
-sudo -u ${APP_USER} bash <<EOF
-cd $PROJECT_DIR
+echo "[10] Adding health endpoint..."
 grep -q "/health" app.js || echo '
 app.get("/health", (req, res) => {
   res.status(200).send("OK");
 });
 ' >> app.js
+
 EOF
+
+### Add these below commented ones before EOF in the above
+
+# echo "[11] Starting app with PM2..."
+# pm2 start app.js --name hospital-app
+# pm2 save
+
+# echo "[12] Configuring PM2 startup..."
+# pm2 startup systemd -u root --hp /
+
+echo "==================================================================="
+echo " Setup Completed Successfully (ec2-user controlled) ✅"
+echo "==================================================================="
 
 ###########Verification Script##############
 
@@ -162,10 +135,10 @@ echo "--------------------------------------------------"
 cd /var/www/html/Hospital-Management-Using-NodeJs-Mysql-Express || exit 1
 grep DB_HOST .env && grep DB_USER .env && grep DB_NAME .env || echo "❌ .env missing values"
 
-echo
-echo "8️⃣ Database Connectivity (via App Logs)"
-echo "--------------------------------------------------"
-pm2 logs hospital-app --lines 20 | grep -i "Database" || echo "⚠️ Check DB connection logs manually"
+# echo
+# echo "8️⃣ Database Connectivity (via App Logs)"
+# echo "--------------------------------------------------"
+# pm2 logs hospital-app --lines 20 | grep -i "Database" || echo "⚠️ Check DB connection logs manually"
 
 echo
 echo "9️⃣ MySQL Client"

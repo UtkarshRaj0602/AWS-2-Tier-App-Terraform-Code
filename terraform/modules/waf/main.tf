@@ -1,5 +1,5 @@
 resource "aws_wafv2_web_acl" "this" {
-  name        = var.name
+  name        = "${var.environment}-${var.name}-waf-web-acl"
   description = var.description
   scope       = var.scope
 

@@ -63,6 +63,9 @@ monitoring_role_arn          = "arn:aws:iam::051826706795:role/RDS-Enhanced-Moni
 auto_minor_version_upgrade   = false
 maintenance_window           = "sat:12:00-sat:12:30"
 deletion_protection          = false
+parameter_group_name         = "stage-mysql-custom-pg"
+parameter_group_family       = "mysql8.0"
+parameter_group_description  = "Custom MySQL Parameter Group"
 
 #########################
 ###########ALB###########
@@ -82,9 +85,9 @@ enable_http = true
 # certificate_arn = "arn:aws:acm:ap-south-1:051826706795:certificate/your-certificate-id"
 
 idle_timeout             = 60
-target_group_port        = 80
+target_group_port        = 3000
 target_group_protocol    = "HTTP"
-health_check_path        = "/"
+health_check_path        = "/health"
 health_check_interval    = 60
 health_check_timeout     = 30
 healthy_threshold        = 5
