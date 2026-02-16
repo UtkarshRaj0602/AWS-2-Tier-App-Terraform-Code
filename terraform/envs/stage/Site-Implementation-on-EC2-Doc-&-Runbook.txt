@@ -1,0 +1,337 @@
+✅ FINAL DEPLOYMENT + TROUBLESHOOTING RUNBOOK (FULL LOG VERSION)
+🔹 AFTER TERRAFORM APPLY
+
+SSH into EC2:
+
+ssh -i key.pem ec2-user@<public-ip>
+sudo su -
+cd /var/www/html/Hospital-Management-Using-NodeJs-Mysql-Express
+
+1️⃣ Add Database Credentials in .env
+nano .env
+
+
+Add:
+
+DB_HOST=stage-rds-instance.cd80mqg4a86n.ap-south-1.rds.amazonaws.com
+DB_USER=admin
+DB_PASSWORD=Stage1234
+DB_NAME=stage_db
+DB_PORT=3306
+PORT=3000
+
+
+⚠️ Important:
+
+DB_PORT → MySQL
+
+PORT → Node app (3000)
+
+2️⃣ Update /models/db_controller.js
+
+Final correct version:
+
+require("dotenv").config();
+const mysql = require("mysql2");
+
+const con = mysql.createConnection({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  port: process.env.DB_PORT || 3306,
+  connectTimeout: 10000
+});
+
+con.connect(function(err) {
+  if (err) {
+    console.error("DB Connection Error:", err);
+  } else {
+    console.log("Connected to DB");
+  }
+});
+
+module.exports = con;
+
+3️⃣ Confirm dotenv Installed
+ls node_modules | grep dotenv
+
+
+If not:
+
+npm install dotenv
+
+4️⃣ PM2 Setup
+pm2 status
+pm2 start app.js --name hospital-app
+pm2 save
+pm2 status
+pm2 logs
+
+🔥 COMPLETE ERROR HISTORY (ALL REAL LOGS YOU FACED)
+❌ ERROR 1 — MySQL 8 Authentication Failure
+
+Initial logs:
+
+0|hospital-app  | Error: ER_NOT_SUPPORTED_AUTH_MODE: Client does not support authentication protocol requested by server; consider upgrading MySQL client
+0|hospital-app  |     at Sequence._packetToError (/var/www/html/.../node_modules/mysql/lib/protocol/sequences/Sequence.js:47:14)
+0|hospital-app  |     at Handshake.ErrorPacket (/var/www/html/.../node_modules/mysql/lib/protocol/sequences/Handshake.js:123:18)
+0|hospital-app  |     at Protocol._parsePacket (/var/www/html/.../node_modules/mysql/lib/protocol/Protocol.js:291:23)
+0|hospital-app  | code: 'ER_NOT_SUPPORTED_AUTH_MODE',
+0|hospital-app  | errno: 1251,
+0|hospital-app  | sqlMessage: 'Client does not support authentication protocol requested by server; consider upgrading MySQL client',
+0|hospital-app  | sqlState: '08004',
+0|hospital-app  | fatal: true
+
+
+Cause:
+
+RDS MySQL 8.4 uses caching_sha2_password
+
+Old mysql npm driver does not support it
+
+✅ Fix:
+npm uninstall mysql
+npm install mysql2
+
+
+Replace:
+
+const mysql = require('mysql');
+
+
+With:
+
+const mysql = require('mysql2');
+
+
+Bulk fix:
+
+grep -r "require('mysql')" .
+find . -type f -name "*.js" -exec sed -i "s/require('mysql')/require('mysql2')/g" {} +
+
+
+Restart:
+
+pm2 restart hospital-app
+pm2 logs
+
+❌ ERROR 2 — Access Denied (Typo in Username)
+
+Logs:
+
+code: 'ER_ACCESS_DENIED_ERROR',
+errno: 1045,
+sqlState: '28000',
+sqlMessage: "Access denied for user 'admim'@'10.0.4.102' (using password: YES)",
+fatal: true
+
+
+Cause:
+Typo in .env:
+
+admim
+
+
+instead of:
+
+admin
+
+✅ Fix in RDS:
+GRANT ALL PRIVILEGES ON stage_db.* TO 'admin'@'%';
+FLUSH PRIVILEGES;
+SHOW GRANTS FOR 'admin'@'%';
+
+
+Restart:
+
+pm2 restart hospital-app
+
+❌ ERROR 3 — RDS Host Blocked
+
+Log:
+
+ER_HOST_IS_BLOCKED
+Host '10.0.4.6' is blocked because of many connection errors
+
+
+Cause:
+Too many failed login attempts.
+
+✅ Fix:
+
+Login to RDS and run:
+
+FLUSH HOSTS;
+
+❌ ERROR 4 — ETIMEDOUT
+
+Log:
+
+0|hospital-app  | Error: connect ETIMEDOUT
+0|hospital-app  |   errorno: 'ETIMEDOUT',
+0|hospital-app  |   code: 'ETIMEDOUT',
+0|hospital-app  |   syscall: 'connect',
+0|hospital-app  |   fatal: true
+
+
+Diagnosis:
+
+You tested:
+
+telnet stage-rds-instance.cd80mqg4a86n.ap-south-1.rds.amazonaws.com 3306
+
+
+Output:
+
+Trying 10.0.4.166...
+Connected to stage-rds-instance.cd80mqg4a86n.ap-south-1.rds.amazonaws.com.
+8.4.79
+caching_sha2_password
+
+
+That confirmed:
+
+Network OK
+
+Security groups OK
+
+RDS reachable
+
+Root cause:
+App not using correct host.
+
+❌ ERROR 5 — ECONNREFUSED 127.0.0.1
+
+Logs:
+
+Error: connect ECONNREFUSED 127.0.0.1:3306
+errno: -111,
+code: 'ECONNREFUSED',
+address: '127.0.0.1',
+port: 3306
+
+
+Cause:
+Hardcoded:
+
+host: 'localhost'
+
+
+inside:
+
+controllers/login.js
+
+✅ Fix:
+
+Remove DB connection from login.js
+
+Replace with:
+
+const con = require('../models/db_controller');
+
+
+Ensure only ONE DB connection exists in project.
+
+❌ ERROR 6 — Invalid JS Comments
+
+You used:
+
+#var con = mysql.createConnection({
+
+
+Node error:
+
+SyntaxError: Private field '#var' must be declared in an enclosing class
+
+
+Cause:
+# is not a JS comment.
+
+Fix:
+Use:
+
+// comment
+
+
+or delete block.
+
+❌ ERROR 7 — Missing Comma
+
+Log:
+
+SyntaxError: Unexpected identifier
+connectTimeout: 10000
+^^^^^^^^^^^^^^
+
+
+Cause:
+
+port: process.env.DB_PORT || 3306
+connectTimeout: 10000
+
+
+Fix:
+Add comma after 3306.
+
+❌ ERROR 8 — Variable Mismatch
+
+Log:
+
+ReferenceError: connection is not defined
+at models/db_controller.js:21:1
+
+
+Cause:
+Defined:
+
+const con = ...
+
+
+But exported:
+
+module.exports = connection;
+
+
+Fix:
+Make consistent:
+
+module.exports = con;
+
+✅ FINAL SUCCESS LOGS
+
+Your final working logs:
+
+DB_HOST: stage-rds-instance.cd80mqg4a86n.ap-south-1.rds.amazonaws.com
+DB_PORT: 3306
+server started
+Connected to DB
+
+
+ALB DNS working:
+
+http://stage-app-alb-668760096.ap-south-1.elb.amazonaws.com
+
+
+Target group healthy.
+
+Application functional.
+
+🎯 FINAL VALIDATION
+Local EC2:
+curl http://localhost:3000
+
+ALB:
+http://stage-app-alb-xxxx.ap-south-1.elb.amazonaws.com
+
+Confirm:
+
+Signup works
+
+Login works
+
+DB inserts working
+
+No crash loop in PM2
+
+Target group status: healthy
