@@ -64,7 +64,7 @@ auto_minor_version_upgrade   = false
 maintenance_window           = "sat:12:00-sat:12:30"
 deletion_protection          = false
 parameter_group_name         = "stage-mysql-custom-pg"
-parameter_group_family       = "mysql8.0"
+parameter_group_family       = "mysql8.4"
 parameter_group_description  = "Custom MySQL Parameter Group"
 
 #########################
