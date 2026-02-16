@@ -13,9 +13,9 @@ nano .env
 
 Add:
 
-DB_HOST=stage-rds-instance.cd80mqg4a86n.ap-south-1.rds.amazonaws.com
-DB_USER=admin
-DB_PASSWORD=Stage1234
+DB_HOST=stage-rds-instance.jfjejfcd80mqgneenenivee4a86n.ap-south-1.rds.amazonaws.com
+DB_USER=adccwminccwdwwww
+DB_PASSWORD=Stwcwcwagecwcwcwww1234
 DB_NAME=stage_db
 DB_PORT=3306
 PORT=3000
